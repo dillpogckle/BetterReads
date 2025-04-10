@@ -1,0 +1,51 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.pages {
+    display: flex;
+    gap: 20px;
+}
+
+.pages a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.pages a:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.auth {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.login, .signup, .logout {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.login:hover, .signup:hover, .logout:hover {
+    cursor: pointer;
+    background-color: #0056b3;
+}
+
+.logout {
+    height: 44px;
+    outline: none;
+    border: none;
+}
