@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import styles from './Navbar.module.css'; // Import the CSS Module
+import styles from './Navbar.module.css';
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext.jsx";
 
 export function Navbar() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
     async function logout() {
         const res = await fetch("/registration/logout/", {
@@ -20,23 +20,6 @@ export function Navbar() {
         }
     }
 
-    // Check if the user is logged in
-    useEffect(() => {
-        async function checkLoginStatus() {
-            const res = await fetch("/registration/check_login/", {
-                credentials: "same-origin",
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                setIsLoggedIn(data.is_authenticated);
-            } else {
-                // handle error
-            }
-        }
-
-        checkLoginStatus();
-    }, [useLocation()]);
 
     return (
         <nav className={styles.navbar}>
