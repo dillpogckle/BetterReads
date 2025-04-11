@@ -24,10 +24,12 @@ export function Navbar() {
     return (
         <nav className={styles.navbar}>
             <div className={styles.pages}>
-                <Link to="/">Home</Link>
-                <Link to="/about">My Books</Link>
-                <Link to="/contact">Profile</Link>
+                <div className={styles.title}> Bookstagram </div>
+                <Link className={styles.home} to="/">Home</Link>
+                <Link className={styles.books} to="/books">My Books</Link>
+                <Link className={styles.profile} to="/profile">Profile</Link>
             </div>
+
             <div className={styles.auth}>
                 {!isLoggedIn ? (
                     <>

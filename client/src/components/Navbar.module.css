@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -6,29 +8,13 @@
     color: white;
 }
 
-.pages {
-    display: flex;
-    gap: 20px;
-}
-
-.pages a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-.pages a:hover {
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-.auth {
+.auth, .pages {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-.login, .signup, .logout {
+.login, .signup, .logout, .home, .books, .profile {
     color: white;
     text-decoration: none;
     padding: 10px 20px;
@@ -39,7 +25,7 @@
     transition: background-color 0.3s ease;
 }
 
-.login:hover, .signup:hover, .logout:hover {
+.login:hover, .signup:hover, .logout:hover, .home:hover, .books:hover, .profile:hover {
     cursor: pointer;
     background-color: #0056b3;
 }
@@ -48,4 +34,20 @@
     height: 44px;
     outline: none;
     border: none;
+}
+
+.title{
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #222;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid #323334;
+    font-family: 'Inter', sans-serif; /* cool modern font */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    user-select: none;
 }
