@@ -1,6 +1,7 @@
 {% extends "registration/base.html"%}
 
 {% block content %}
+<div class="title"> Bookstagram </div>
 <form action="/registration/sign_up/" method="post">
   {% csrf_token %}
   <div>
