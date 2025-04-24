@@ -27,6 +27,17 @@ def index(req):
 
 def search(req, query):
     url = f"https://openlibrary.org/search.json?q={query}"
+    res = requests.get(url)
+
+    if res.status_code == 200:
+        data = res.json()
+        return JsonResponse(data)
+    else:
+        return JsonResponse({"error": "Failed to fetch data from Open Library"}, status=res.status_code)
+
+
+def get_book(req, work_num):
+    url = f"https://openlibrary.org/works/{work_num}.json"
 
     res = requests.get(url)
 
