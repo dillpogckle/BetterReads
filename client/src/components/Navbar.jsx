@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './Navbar.module.css';
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext.jsx";
 
 export function Navbar() {
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+    const [search, setSearch] = useState("");
+    const navigate = useNavigate(); // Move useNavigate to the top level of the component
 
     async function logout() {
         const res = await fetch("/registration/logout/", {
@@ -12,7 +14,6 @@ export function Navbar() {
         });
 
         if (res.ok) {
-            // navigate away from the single page app!
             setIsLoggedIn(false);
             window.location = "/";
         } else {
@@ -20,6 +21,10 @@ export function Navbar() {
         }
     }
 
+    function handleSearch() {
+        const query = search.split(" ").join("+");
+        navigate(`/search/${query}`); // Use navigate here
+    }
 
     return (
         <nav className={styles.navbar}>
@@ -31,6 +36,18 @@ export function Navbar() {
             </div>
 
             <div className={styles.auth}>
+                <input
+                    type="text"
+                    className={styles.search}
+                    placeholder="Search..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            handleSearch();
+                        }
+                    }}
+                />
                 {!isLoggedIn ? (
                     <>
                         <a href="/registration/sign_in/" className={styles.login}>Login</a>

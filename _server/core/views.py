@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.conf  import settings
 import json
 import os
+import requests
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
 # Load manifest when server launches
@@ -12,7 +14,6 @@ if not settings.DEBUG:
 
 
 # Create your views here.
-# @login_required
 def index(req):
     context = {
         "asset_url": os.environ.get("ASSET_URL", ""),
@@ -22,3 +23,15 @@ def index(req):
         "css_file": "" if settings.DEBUG else MANIFEST["src/main.ts"]["css"][0]
     }
     return render(req, "core/index.html", context)
+
+
+def search(req, query):
+    url = f"https://openlibrary.org/search.json?q={query}"
+
+    res = requests.get(url)
+
+    if res.status_code == 200:
+        data = res.json()
+        return JsonResponse(data)
+    else:
+        return JsonResponse({"error": "Failed to fetch data from Open Library"}, status=res.status_code)

@@ -7,6 +7,7 @@ import { createHashRouter, RouterProvider} from "react-router-dom";
 import { Books } from "./pages/Books.jsx";
 import { Profile } from "./pages/Profile.jsx";
 import { Home } from "./pages/Home.jsx";
+import { Search } from "./pages/Search.jsx";
 
 const router = createHashRouter([
     {
@@ -24,6 +25,10 @@ const router = createHashRouter([
             {
                 path: "/profile",
                 element: <Profile />,
+            },
+            {
+                path: "/search/:query",
+                element: <Search />,
             }
 
             ]
