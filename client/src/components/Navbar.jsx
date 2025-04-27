@@ -23,7 +23,7 @@ export function Navbar() {
 
     function handleSearch() {
         const query = search.split(" ").join("+");
-        navigate(`/search/${query}`); // Use navigate here
+        navigate(`/search/${query}`);
     }
 
     return (

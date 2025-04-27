@@ -5,4 +5,5 @@ urlpatterns = [
     path('', view=views.index, name="index"),
     path('search/<query>/', view=views.search, name="search"),
     path('works/<work_num>/', view=views.get_book, name="get_book"),
+    path('authors/<author_key>/', view=views.get_author, name="get_author"),
 ]

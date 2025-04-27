@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import styles from "./SearchResult.module.css";
+import { useNavigate } from "react-router-dom";
 
 export function SearchResult({ workNum, cover }) {
     const [book, setBook] = useState(null);
+    const navigate = useNavigate();
     const [author, setAuthor] = useState("");
 
     useEffect(() => {
@@ -12,29 +14,27 @@ export function SearchResult({ workNum, cover }) {
                 return;
             }
 
-            try {
-                const res = await fetch(`${workNum}`, {
-                    credentials: "same-origin",
-                });
+            const res = await fetch(`${workNum}`, {
+                credentials: "same-origin",
+            });
 
-                if (res.ok) {
-                    const data = await res.json();
-                    setBook(data);
+            if (res.ok) {
+                const data = await res.json();
+                setBook(data);
 
-                    if (data.authors?.[0]?.author?.key) {
-                        const authorRes = await fetch(
-                            `https://openlibrary.org${data.authors[0].author.key}.json`
-                        );
-                        if (authorRes.ok) {
-                            const authorData = await authorRes.json();
-                            setAuthor(authorData.name);
-                        }
+                const authorKey = data.authors?.[0]?.author?.key;
+
+                if (authorKey) {
+                    const authorRes = await fetch(`${authorKey}`, {
+                        credentials: "same-origin",
+                    });
+                    if (authorRes.ok) {
+                        const authorData = await authorRes.json();
+                        setAuthor(authorData.name);
                     }
-                } else {
-                    console.error("Error fetching book data:", res.statusText);
                 }
-            } catch (error) {
-                console.error("Network error while fetching book data:", error);
+            } else {
+                console.error("Error fetching book data:", res.statusText);
             }
         }
 
@@ -44,9 +44,11 @@ export function SearchResult({ workNum, cover }) {
     if (!book) {
         return <div>Loading...</div>;
     }
-    function handleClick() {
-        console.log("Book clicked:", book.title);
-    }
+    const handleClick = () => {
+        navigate(`/book/${workNum.split("/")[2]}`, {
+            state: { cover: cover , author: author },
+        });
+    };
 
     return (
         <div className={styles.card} onClick={handleClick}>
@@ -56,8 +58,8 @@ export function SearchResult({ workNum, cover }) {
                 className={styles.cover}
             />
             <div className={styles.info}>
-                <h3 className={styles.title}>{book.title}</h3>
-                <p className={styles.author}><strong>Author:</strong> {author || "Unknown"}</p>
+                    <h3 className={styles.title}> {book.title} </h3>
+                    <p className={styles.author}><strong>Author:</strong> {author || "Unknown"}</p>
             </div>
         </div>
     );

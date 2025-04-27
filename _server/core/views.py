@@ -36,6 +36,7 @@ def search(req, query):
         return JsonResponse({"error": "Failed to fetch data from Open Library"}, status=res.status_code)
 
 
+
 def get_book(req, work_num):
     url = f"https://openlibrary.org/works/{work_num}.json"
 
@@ -44,5 +45,17 @@ def get_book(req, work_num):
     if res.status_code == 200:
         data = res.json()
         return JsonResponse(data)
+    else:
+        return JsonResponse({"error": "Failed to fetch data from Open Library"}, status=res.status_code)
+
+
+def get_author(req, author_key):
+    if not author_key:
+        return JsonResponse({"error": "Missing authorKey"}, status=400)
+
+    res = requests.get(f"https://openlibrary.org/authors/{author_key}.json")
+
+    if res.ok:
+        return JsonResponse(res.json())
     else:
         return JsonResponse({"error": "Failed to fetch data from Open Library"}, status=res.status_code)

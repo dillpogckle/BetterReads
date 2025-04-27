@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import styles from "./Search.module.css";
 
 export function Search() {
+    const { query } = useParams();
+    const [results, setResults] = useState([]);
+
     async function makeQuery(query) {
         const res = await fetch(`/search/${query}`, {
             credentials: "same-origin",
@@ -19,14 +22,10 @@ export function Search() {
         }
     }
 
-    const { query } = useParams();
-    const [results, setResults] = useState([]);
-
     useEffect(() => {
         async function fetchData() {
             const data = await makeQuery(query);
             setResults(data.docs);
-            console.log(data.docs);
         }
 
         fetchData();
