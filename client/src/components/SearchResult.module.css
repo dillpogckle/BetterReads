@@ -4,8 +4,8 @@
     width: 100%;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    background-color: #c5c1c1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: #1e1e1e; /* Dark background */
     cursor: pointer;
     transition: background-color 0.2s ease;
     text-decoration: none;
@@ -13,7 +13,7 @@
 }
 
 .card:hover {
-    background-color: #f9f9f9;
+    background-color: #2c2c2c;
 }
 
 .cover {
@@ -35,10 +35,10 @@
     font-size: 1.25rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    color: #222;
+    color: #ffffff;
 }
 
 .author {
     font-size: 1rem;
-    color: #555;
+    color: #aaaaaa;
 }

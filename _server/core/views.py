@@ -6,7 +6,7 @@ import requests
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Book, Review
-from django.contrib.auth.models import User
+from django.db.models import Prefetch
 
 # Load manifest when server launches
 MANIFEST = {}
@@ -25,6 +25,7 @@ def index(req):
         "css_file": "" if settings.DEBUG else MANIFEST["src/main.ts"]["css"][0]
     }
     return render(req, "core/index.html", context)
+
 
 def search(req, query):
     if req.method != "GET":
@@ -137,6 +138,7 @@ def add_to_list(request, work_num):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 @login_required
 def book_status(req, work_num):
     if req.method == "GET":
@@ -190,6 +192,7 @@ def book_lists(req):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 @login_required
 def add_friend(req):
     if req.method == "POST":
@@ -222,6 +225,7 @@ def add_friend(req):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
 @login_required
 def profile_data(req):
     if req.method == "GET":
@@ -250,41 +254,6 @@ def profile_data(req):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
-@login_required
-def get_friends(req):
-    if req.method == "GET":
-        try:
-            user_profile = UserProfile.objects.get(user=req.user)
-            friends = user_profile.friends.all()
-
-            friend_list = [{
-                "username": friend.user.username,
-                "friend_key": friend.friend_key
-            } for friend in friends]
-
-            return JsonResponse({"friends": friend_list}, status=200)
-
-        except UserProfile.DoesNotExist:
-            return JsonResponse({"error": "User profile not found."}, status=404)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Invalid request method."}, status=405)
-
-
-@login_required
-def get_friend_code(req):
-    if req.method == "GET":
-        try:
-            user_profile = UserProfile.objects.get(user=req.user)
-            return JsonResponse({"friend_key": user_profile.friend_key}, status=200)
-
-        except UserProfile.DoesNotExist:
-            return JsonResponse({"error": "User profile not found."}, status=404)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 @login_required
 def submit_review(req):
@@ -330,3 +299,49 @@ def submit_review(req):
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
+
+@login_required
+def friends_recent_reviews(req):
+    if req.method == "GET":
+        try:
+            # Get the user's profile
+            user_profile = UserProfile.objects.prefetch_related(
+                Prefetch('friends', queryset=UserProfile.objects.select_related('user'))
+            ).get(user=req.user)
+
+            # Get all friends
+            friends = user_profile.friends.all()
+
+            # Fetch the most recent reviews for each friend
+            recent_reviews = Review.objects.filter(
+                user__in=[friend.user for friend in friends]
+            ).select_related('user', 'book').order_by('-created_at')[:10]  # Limit to 10 most recent reviews
+
+            # Serialize the reviews
+            reviews_data = [
+                {
+                    "friend": {
+                        "first_name": review.user.first_name,
+                        "last_name": review.user.last_name,
+                    },
+                    "book": {
+                        "title": review.book.title,
+                        "author": review.book.author,
+                        "cover_image": review.book.cover_image,
+                        "work_num": review.book.work_num,
+                    },
+                    "review": review.content,
+                    "rating": review.rating,
+                    "created_at": review.created_at,
+                }
+                for review in recent_reviews
+            ]
+
+            return JsonResponse({"reviews": reviews_data}, status=200)
+
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)

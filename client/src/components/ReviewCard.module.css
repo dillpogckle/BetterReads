@@ -1,0 +1,72 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    background-color: #1e1e1e;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    background-color: #2a2a2a;
+}
+
+.header {
+    padding: 1rem;
+    background-color: #292929;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerText {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.date {
+    font-size: 0.85rem;
+    color: #aaaaaa;
+}
+
+.body {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+}
+
+.cover {
+    width: 120px;
+    height: 180px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border-radius: 8px;
+}
+
+.info {
+    padding-left: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.reviewContent {
+    font-size: 1rem;
+    color: #dddddd;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+.rating {
+    color: #ffc107;
+    font-weight: 600;
+}

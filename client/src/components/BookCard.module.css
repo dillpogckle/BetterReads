@@ -1,16 +1,16 @@
 .bookCard {
     width: 180px;
     padding: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid #333;
     border-radius: 10px;
-    background-color: #fff;
+    background-color: #1e1e1e;
     text-align: center;
     transition: box-shadow 0.3s ease, transform 0.2s ease;
     cursor: pointer;
 }
 
 .bookCard:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     transform: translateY(-5px);
 }
 
@@ -26,10 +26,10 @@
     font-size: 1.1rem;
     font-weight: bold;
     margin: 0.5rem 0;
-    color: #333;
+    color: #ffffff;
 }
 
 .bookAuthor {
     font-size: 0.95rem;
-    color: #666;
+    color: #aaaaaa;
 }

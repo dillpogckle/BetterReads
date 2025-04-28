@@ -2,16 +2,16 @@
     max-width: 600px;
     margin: 2rem auto;
     padding: 2rem;
-    background-color: #ffffff;
+    background-color: #1e1e1e; /* Dark background */
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow for dark bg */
 }
 
 .title {
     text-align: center;
     margin-bottom: 1.5rem;
     font-size: 2rem;
-    color: #242424;
+    color: #ffffff; /* Bright white title */
 }
 
 .reviewForm {
@@ -28,14 +28,16 @@
 .label {
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #555;
+    color: #cccccc; /* Light gray for labels */
 }
 
 .textarea {
     padding: 0.8rem;
     font-size: 1rem;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #555555; /* Darker border */
+    background-color: #2c2c2c; /* Dark input background */
+    color: #ffffff; /* Light text */
     resize: vertical;
 }
 
@@ -43,12 +45,14 @@
     padding: 0.5rem;
     font-size: 1rem;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #555555;
+    background-color: #2c2c2c;
+    color: #ffffff;
 }
 
 .submitButton {
     padding: 0.8rem;
-    background-color: #007bff;
+    background-color: #007bff; /* Vivid blue */
     color: white;
     border: none;
     font-size: 1rem;
@@ -58,5 +62,5 @@
 }
 
 .submitButton:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Slightly darker on hover */
 }
