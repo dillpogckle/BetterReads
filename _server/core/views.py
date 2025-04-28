@@ -191,21 +191,6 @@ def book_lists(req):
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 @login_required
-def num_books_read(req):
-    if req.method == "GET":
-        try:
-            user_profile = UserProfile.objects.get(user=req.user)
-            num_books_read = user_profile.read.count()
-            return JsonResponse({"num_books_read": num_books_read}, status=200)
-
-        except UserProfile.DoesNotExist:
-            return JsonResponse({"error": "User profile not found."}, status=404)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Invalid request method."}, status=405)
-
-@login_required
 def add_friend(req):
     if req.method == "POST":
         try:
@@ -218,12 +203,46 @@ def add_friend(req):
             user_profile = UserProfile.objects.get(user=req.user)
 
             if user_profile.add_friend_by_key(friend_key):
-                return JsonResponse({"message": "Friend added successfully."}, status=200)
+                # Fetch the friend_profile manually so you can return it
+                friend_profile = UserProfile.objects.get(friend_key=friend_key)
+                return JsonResponse({
+                    "first_name": friend_profile.user.first_name,
+                    "last_name": friend_profile.user.last_name,
+                    "friend_key": friend_profile.friend_key
+                }, status=200)
             else:
                 return JsonResponse({"error": "Friend key not found."}, status=404)
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format."}, status=400)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def profile_data(req):
+    if req.method == "GET":
+        try:
+            user_profile = UserProfile.objects.get(user=req.user)
+
+            profile_data = {
+                "first_name": req.user.first_name,
+                "last_name": req.user.last_name,
+                "friend_key": user_profile.friend_key,
+                "read_count": user_profile.read.count(),
+                "friends_count": user_profile.friends.count(),
+                "friends": [{
+                    "first_name": friend.user.first_name,
+                    "last_name": friend.user.last_name,
+                    "friend_key": friend.friend_key
+                } for friend in user_profile.friends.all()]
+            }
+
+            return JsonResponse(profile_data, status=200)
+
         except UserProfile.DoesNotExist:
             return JsonResponse({"error": "User profile not found."}, status=404)
         except Exception as e:
@@ -244,6 +263,21 @@ def get_friends(req):
             } for friend in friends]
 
             return JsonResponse({"friends": friend_list}, status=200)
+
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+@login_required
+def get_friend_code(req):
+    if req.method == "GET":
+        try:
+            user_profile = UserProfile.objects.get(user=req.user)
+            return JsonResponse({"friend_key": user_profile.friend_key}, status=200)
 
         except UserProfile.DoesNotExist:
             return JsonResponse({"error": "User profile not found."}, status=404)

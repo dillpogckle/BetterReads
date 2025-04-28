@@ -10,8 +10,8 @@ class UserProfile (models.Model):
     to_read = models.ManyToManyField('Book', blank=True, related_name='to_read')
     reading = models.ManyToManyField('Book', blank=True, related_name='reading')
     read = models.ManyToManyField('Book', blank=True, related_name='read')
-    friend_key = models.CharField(max_length=255, blank=True, unique=True, related_name='friend_key')
-    friends = models.ManyToManyField('self', blank=True, related_name='friends')
+    friend_key = models.CharField(max_length=255, blank=True, unique=True)
+    friends = models.ManyToManyField('self', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.friend_key:

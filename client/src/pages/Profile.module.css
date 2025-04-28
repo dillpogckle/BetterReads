@@ -1,0 +1,72 @@
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    color: #1b1b1b;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.friendList {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.friendItem {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+}
+
+.friendCode {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.button {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.statusMessage {
+    margin-top: 15px;
+    font-size: 1rem;
+    color: #555;
+    text-align: center;
+}
