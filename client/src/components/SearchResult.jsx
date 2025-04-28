@@ -46,7 +46,7 @@ export function SearchResult({ workNum, cover }) {
     }
     const handleClick = () => {
         navigate(`/book/${workNum.split("/")[2]}`, {
-            state: { cover: cover , author: author },
+            state: { cover: `https://covers.openlibrary.org/b/id/${cover}-M.jpg` , author: author },
         });
     };
 

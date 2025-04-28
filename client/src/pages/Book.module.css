@@ -1,0 +1,41 @@
+.bookPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.bookTitle {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.bookCover {
+    width: 250px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    margin-bottom: 1rem;
+}
+
+.bookDescription {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+.bookAuthor {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 5rem;
+}

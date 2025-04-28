@@ -1,5 +1,6 @@
 import * as cookie from "cookie"
 import { useEffect, useState } from "react";
+import styles from "./AddBookButtons.module.css";
 
 export function AddBookButtons({ workNum, title, author, coverImage, description }) {
     const [status, setStatus] = useState("not_in_list");
@@ -61,33 +62,33 @@ export function AddBookButtons({ workNum, title, author, coverImage, description
     };
 
     return (
-        <div>
-            {status === null && <div>Loading...</div>}
+        <div className={styles.buttonsContainer}>
+            {status === null && <div className={styles.loadingMessage}>Loading...</div>}
 
             {status === "to_read" && (
-                <div>
-                    <button onClick={addToCurrentlyReading}>Add to Currently Reading</button>
-                    <button onClick={addToRead}>Add to Read</button>
+                <div className={styles.buttonGroup}>
+                    <button className={styles.button} onClick={addToCurrentlyReading}>Add to Currently Reading</button>
+                    <button className={styles.button} onClick={addToRead}>Add to Read</button>
                 </div>
             )}
 
             {status === "reading" && (
-                <div>
-                    <button onClick={addToRead}>Add to Read</button>
+                <div className={styles.buttonGroup}>
+                    <button className={styles.button} onClick={addToRead}>Add to Read</button>
                 </div>
             )}
 
             {status === "read" && (
-                <div>
-                    <p>This book has already been read!</p>
+                <div className={styles.readMessage}>
+                    This book has already been read!
                 </div>
             )}
 
             {status === "not_in_list" && (
-                <div>
-                    <button onClick={addToWantToRead}>Add to Want to Read</button>
-                    <button onClick={addToCurrentlyReading}>Add to Currently Reading</button>
-                    <button onClick={addToRead}>Add to Read</button>
+                <div className={styles.buttonGroup}>
+                    <button className={styles.button} onClick={addToWantToRead}>Add to Want to Read</button>
+                    <button className={styles.button} onClick={addToCurrentlyReading}>Add to Currently Reading</button>
+                    <button className={styles.button} onClick={addToRead}>Add to Read</button>
                 </div>
             )}
         </div>

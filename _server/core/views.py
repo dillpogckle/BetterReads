@@ -5,7 +5,7 @@ import os
 import requests
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Book
+from .models import UserProfile, Book, Review
 from django.contrib.auth.models import User
 
 # Load manifest when server launches
@@ -27,6 +27,8 @@ def index(req):
     return render(req, "core/index.html", context)
 
 def search(req, query):
+    if req.method != "GET":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
     try:
         url = f"https://openlibrary.org/search.json?q={query}"
         res = requests.get(url)
@@ -46,6 +48,8 @@ def search(req, query):
 
 
 def get_book(req, work_num):
+    if req.method != "GET":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
     try:
         url = f"https://openlibrary.org/works/{work_num}.json"
         res = requests.get(url)
@@ -65,6 +69,9 @@ def get_book(req, work_num):
 
 
 def get_author(req, author_key):
+    if req.method != "GET":
+        return JsonResponse({"error": "Invalid request method."}, status=405)
+
     if not author_key:
         return JsonResponse({"error": "Missing authorKey"}, status=400)
 
@@ -131,10 +138,10 @@ def add_to_list(request, work_num):
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 @login_required
-def book_status(request, work_num):
-    if request.method == "GET":
+def book_status(req, work_num):
+    if req.method == "GET":
         try:
-            user_profile = UserProfile.objects.get(user=request.user)
+            user_profile = UserProfile.objects.get(user=req.user)
             book = Book.objects.get(work_num=work_num)
 
             if book in user_profile.to_read.all():
@@ -154,3 +161,136 @@ def book_status(request, work_num):
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+@login_required
+def book_lists(req):
+    if req.method == "GET":
+        try:
+            user_profile = UserProfile.objects.get(user=req.user)
+
+            to_read_books = user_profile.to_read.all()
+            reading_books = user_profile.reading.all()
+            read_books = user_profile.read.all()
+
+            to_read_list = [{"work_num": book.work_num, "title": book.title, "author": book.author, "cover_image": book.cover_image} for book in to_read_books]
+            reading_list = [{"work_num": book.work_num, "title": book.title, "author": book.author, "cover_image": book.cover_image} for book in reading_books]
+            read_list = [{"work_num": book.work_num, "title": book.title, "author": book.author, "cover_image": book.cover_image} for book in read_books]
+
+            return JsonResponse({
+                "to_read": to_read_list,
+                "reading": reading_list,
+                "read": read_list
+            }, status=200)
+
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def num_books_read(req):
+    if req.method == "GET":
+        try:
+            user_profile = UserProfile.objects.get(user=req.user)
+            num_books_read = user_profile.read.count()
+            return JsonResponse({"num_books_read": num_books_read}, status=200)
+
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def add_friend(req):
+    if req.method == "POST":
+        try:
+            data = json.loads(req.body)
+            friend_key = data.get("friend_key")
+
+            if not friend_key:
+                return JsonResponse({"error": "Missing friend_key"}, status=400)
+
+            user_profile = UserProfile.objects.get(user=req.user)
+
+            if user_profile.add_friend_by_key(friend_key):
+                return JsonResponse({"message": "Friend added successfully."}, status=200)
+            else:
+                return JsonResponse({"error": "Friend key not found."}, status=404)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format."}, status=400)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def get_friends(req):
+    if req.method == "GET":
+        try:
+            user_profile = UserProfile.objects.get(user=req.user)
+            friends = user_profile.friends.all()
+
+            friend_list = [{
+                "username": friend.user.username,
+                "friend_key": friend.friend_key
+            } for friend in friends]
+
+            return JsonResponse({"friends": friend_list}, status=200)
+
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+@login_required
+def write_review(req):
+    if req.method == "POST":
+        try:
+            data = json.loads(req.body)
+
+            work_num = data.get("work_num")
+            content = data.get("content")
+            rating = data.get("rating")
+
+            if not work_num or not content:
+                return JsonResponse({"error": "Missing required fields."}, status=400)
+
+            book = Book.objects.get(work_num=work_num)
+            user_profile = UserProfile.objects.get(user=req.user)
+
+            # Check if a review already exists for this user and book
+            review, created = Review.objects.get_or_create(
+                user=user_profile.user,
+                book=book,
+                defaults={"content": content, "rating": rating}
+            )
+
+            if not created:
+                # Update existing review
+                review.content = content
+                review.rating = rating
+                review.save()
+
+            return JsonResponse({"message": "Review saved successfully."}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format."}, status=400)
+        except Book.DoesNotExist:
+            return JsonResponse({"error": "Book not found."}, status=404)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+

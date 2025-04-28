@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import 'vite/modulepreload-polyfill'
 import { createHashRouter, RouterProvider} from "react-router-dom";
-import { Books } from "./pages/Books.jsx";
+import { BookShelf } from "./pages/BookShelf.jsx";
 import { Profile } from "./pages/Profile.jsx";
 import { Home } from "./pages/Home.jsx";
 import { Search } from "./pages/Search.jsx";
@@ -21,7 +21,7 @@ const router = createHashRouter([
             },
             {
                 path: "/books",
-                element: <Books />,
+                element: <BookShelf />,
             },
             {
                 path: "/profile",

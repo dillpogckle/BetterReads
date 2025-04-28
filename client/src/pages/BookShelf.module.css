@@ -1,0 +1,43 @@
+.bookshelfPage {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sectionTitle {
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.5rem;
+    color: #c5c1c1;
+}
+
+.bookList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.emptyListMessage {
+    font-size: 1rem;
+    color: #cccccc;
+    text-align: center;
+}
+
+.notLoggedInContainer {
+    text-align: center;
+    padding: 5rem;
+}
+
+.notLoggedInTitle {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.notLoggedInMessage {
+    font-size: 1.2rem;
+    color: #666;
+}
