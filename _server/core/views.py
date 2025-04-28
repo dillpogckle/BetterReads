@@ -287,17 +287,19 @@ def get_friend_code(req):
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 @login_required
-def write_review(req):
+def submit_review(req):
     if req.method == "POST":
         try:
             data = json.loads(req.body)
 
             work_num = data.get("work_num")
-            content = data.get("content")
+            content = data.get("review")
             rating = data.get("rating")
 
-            if not work_num or not content:
-                return JsonResponse({"error": "Missing required fields."}, status=400)
+            if not work_num:
+                return JsonResponse({"error": "Missing worknum."}, status=400)
+            if not content:
+                return JsonResponse({"error": "Missing review content."}, status=400)
 
             book = Book.objects.get(work_num=work_num)
             user_profile = UserProfile.objects.get(user=req.user)

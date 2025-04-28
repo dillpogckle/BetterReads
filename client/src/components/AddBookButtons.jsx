@@ -1,9 +1,13 @@
 import * as cookie from "cookie"
 import { useEffect, useState } from "react";
+import {ReviewModal} from "./ReviewModal.jsx";
 import styles from "./AddBookButtons.module.css";
+import {useNavigate} from "react-router-dom";
 
 export function AddBookButtons({ workNum, title, author, coverImage, description }) {
     const [status, setStatus] = useState("not_in_list");
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchCurrentStatus() {
@@ -56,10 +60,26 @@ export function AddBookButtons({ workNum, title, author, coverImage, description
         setStatus("reading");
     };
 
-    const addToRead = async () => {
+    const handleAddToRead = () => {
+        // Instead of adding immediately, open the modal
+        setShowModal(true);
+    };
+
+    const confirmAddToRead = async () => {
         await addToList("read");
         setStatus("read");
+        setShowModal(false);
+        navigate(`/write-review/${workNum}`); // Redirect to the review page
+
     };
+
+    const cancelAddToRead = async () => {
+        await addToList("read");
+        setStatus("read");
+        setShowModal(false);
+    };
+
+
 
     return (
         <div className={styles.buttonsContainer}>
@@ -68,13 +88,13 @@ export function AddBookButtons({ workNum, title, author, coverImage, description
             {status === "to_read" && (
                 <div className={styles.buttonGroup}>
                     <button className={styles.button} onClick={addToCurrentlyReading}>Add to Currently Reading</button>
-                    <button className={styles.button} onClick={addToRead}>Add to Read</button>
+                    <button className={styles.button} onClick={handleAddToRead}>Add to Read</button>
                 </div>
             )}
 
             {status === "reading" && (
                 <div className={styles.buttonGroup}>
-                    <button className={styles.button} onClick={addToRead}>Add to Read</button>
+                    <button className={styles.button} onClick={handleAddToRead}>Add to Read</button>
                 </div>
             )}
 
@@ -88,8 +108,15 @@ export function AddBookButtons({ workNum, title, author, coverImage, description
                 <div className={styles.buttonGroup}>
                     <button className={styles.button} onClick={addToWantToRead}>Add to Want to Read</button>
                     <button className={styles.button} onClick={addToCurrentlyReading}>Add to Currently Reading</button>
-                    <button className={styles.button} onClick={addToRead}>Add to Read</button>
+                    <button className={styles.button} onClick={handleAddToRead}>Add to Read</button>
                 </div>
+            )}
+
+            {showModal && (
+                <ReviewModal
+                    onConfirm={confirmAddToRead}
+                    onCancel={cancelAddToRead}
+                />
             )}
         </div>
     );

@@ -9,6 +9,7 @@ import { Profile } from "./pages/Profile.jsx";
 import { Home } from "./pages/Home.jsx";
 import { Search } from "./pages/Search.jsx";
 import { Book } from "./pages/Book.jsx";
+import { Review } from "./pages/Review.jsx";
 
 const router = createHashRouter([
     {
@@ -34,7 +35,12 @@ const router = createHashRouter([
             {
                 path: "/book/:workNum",
                 element: <Book />,
-            }
+            },
+            {
+                path: "/write-review/:workNum",
+                element: <Review />,
+            },
+
 
             ]
     }
