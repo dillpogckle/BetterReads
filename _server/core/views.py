@@ -5,6 +5,7 @@ import os
 import requests
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from .models import UserProfile, Book
 
 # Load manifest when server launches
 MANIFEST = {}
@@ -59,3 +60,38 @@ def get_author(req, author_key):
         return JsonResponse(res.json())
     else:
         return JsonResponse({"error": "Failed to fetch data from Open Library"}, status=res.status_code)
+
+@login_required
+def add_want_to_read(request, work_num):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+
+            title = data.get("title")
+            author = data.get("author")
+            cover_image = data.get("coverImage")
+            description = data.get("description")
+
+            book, created = Book.objects.get_or_create(
+                work_num=work_num,  # assuming `work_num` is a unique identifier
+                defaults={
+                    "title": title,
+                    "author": author,
+                    "cover_image": cover_image,
+                    "description": description,
+                },
+            )
+
+            # Get the user profile and add the book to the "to_read" list
+            user_profile = UserProfile.objects.get(user=request.user)
+            user_profile.to_read.add(book)
+
+            return JsonResponse({"message": "Book added to your 'want to read' list."}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format."}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)

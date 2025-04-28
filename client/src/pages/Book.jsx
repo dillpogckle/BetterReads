@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { AddBookButtons } from "../components/AddBookButtons.jsx";
 
 export function Book() {
     const location = useLocation();
@@ -42,6 +43,13 @@ export function Book() {
                     />
                     <p>{book.description?.value || book.description || "No description available."}</p>
                     <p>Author: {author}</p>
+                    <AddBookButtons
+                        title={book.title}
+                        author={author}
+                        workNum={workNum}
+                        coverImage={`https://covers.openlibrary.org/b/id/${cover}-M.jpg`}
+                        description={book.description?.value || book.description || "No description available."}
+                    />
                 </div>
             ) : (
                 <div>Loading...</div>
