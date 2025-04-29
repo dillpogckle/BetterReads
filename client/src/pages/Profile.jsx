@@ -72,6 +72,15 @@ export function Profile() {
         }
     }
 
+    if (!isLoggedIn) {
+        return (
+            <div className={styles.container}>
+                <h1>Profile</h1>
+                <p>Please log in to view your profile.</p>
+            </div>
+        );
+    }
+
     if (!profileData) {
         return (
             <div className={styles.container}>

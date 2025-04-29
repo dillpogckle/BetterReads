@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { AddBookButtons } from "../components/AddBookButtons.jsx";
+import { AuthContext } from "../contexts/AuthContext.jsx";
 import styles from "./Book.module.css";
 
 export function Book() {
@@ -9,6 +10,7 @@ export function Book() {
     const { cover, author } = location.state;
     const { workNum } = useParams();
     const [book, setBook] = useState(null);
+    const { isLoggedIn } = useContext(AuthContext);
 
     useEffect(() => {
         async function fetchBook() {
@@ -47,6 +49,7 @@ export function Book() {
                         {book.description?.value || book.description || "No description available."}
                     </p>
                     <p className={styles.bookAuthor}>Author: {author}</p>
+                    {isLoggedIn && (
                     <AddBookButtons
                         title={book.title}
                         author={author}
@@ -54,6 +57,7 @@ export function Book() {
                         coverImage={cover}
                         description={book.description?.value || book.description || "No description available."}
                     />
+                    )}
                 </div>
             ) : (
                 <div className={styles.loading}>Loading...</div>

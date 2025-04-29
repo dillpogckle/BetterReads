@@ -1,11 +1,12 @@
 // src/pages/Home.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { ReviewCard } from "../components/ReviewCard.jsx";
+import { AuthContext } from "../contexts/AuthContext.jsx";
 import styles from "./Home.module.css";
 
 export function Home() {
     const [reviews, setReviews] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { isLoggedIn } = useContext(AuthContext);
 
     useEffect(() => {
         async function fetchRecentReviews() {
@@ -30,7 +31,16 @@ export function Home() {
         fetchRecentReviews();
     }, []);
 
-    if (loading) {
+    if (!isLoggedIn) {
+        return (
+            <div className={styles.homeContainer}>
+                <h1 className={styles.title}>Welcome to Bookstagram</h1>
+                <p>Please log in to see your friends' recent reviews.</p>
+            </div>
+        );
+    }
+
+    if (!reviews) {
         return <div className={styles.loading}>Loading recent reviews...</div>;
     }
 

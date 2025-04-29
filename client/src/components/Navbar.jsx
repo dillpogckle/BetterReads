@@ -22,6 +22,7 @@ export function Navbar() {
     }
 
     function handleSearch() {
+        setSearch("");
         const query = search.split(" ").join("+");
         navigate(`/search/${query}`);
     }
