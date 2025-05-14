@@ -19,7 +19,7 @@ export function Book() {
                 return;
             }
 
-            const res = await fetch(`works/${workNum}`, {
+            const res = await fetch(`/works/${workNum}`, {
                 credentials: "same-origin",
             });
 

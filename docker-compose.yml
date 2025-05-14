@@ -1,0 +1,26 @@
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_dev
+    volumes:
+      - ./_server:/app/_server
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+    command: poetry run python _server/manage.py runserver 0.0.0.0:8000
+  vite:
+    image: node:18-alpine
+    container_name: vite_dev
+    working_dir: /app
+    volumes:
+      - ./client:/app/client
+    ports:
+      - "5173:5173"
+    command: sh -c "cd client && npm install && npm run dev"
+
+networks:
+  dev_network:
+    driver: bridge
