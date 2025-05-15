@@ -18,14 +18,17 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b3+-#mtd71hul#1(jc^^x#k%4zr)aief^c9i14ya77)9e)1af('
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
+if DEBUG:
+    SECRET_KEY = 'django-insecure-b3+-#mtd71hul#1(jc^^x#k%4zr)aief^c9i14ya77)9e)1af('
+else:
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
 ALLOWED_HOSTS = ["*"]
 
